@@ -58,10 +58,31 @@ static char *build_anthropic_request(
     }
 
     if (!cJSON_AddStringToObject(root, "model", llm_get_model()) ||
-        !cJSON_AddNumberToObject(root, "max_tokens", LLM_MAX_TOKENS) ||
-        !cJSON_AddStringToObject(root, "system", system_prompt)) {
+        !cJSON_AddNumberToObject(root, "max_tokens", LLM_MAX_TOKENS)) {
         goto fail;
     }
+
+    // Mark the system block cacheable: the cached prefix covers the tool
+    // definitions + system prompt, so tool-call rounds after the first skip
+    // re-processing them (lower latency and cost). Ignored by the API when
+    // the prefix is below the model's minimum cacheable length.
+    cJSON *system_blocks = cJSON_AddArrayToObject(root, "system");
+    cJSON *system_block = cJSON_CreateObject();
+    cJSON *cache_control = cJSON_CreateObject();
+    if (!system_blocks || !system_block || !cache_control) {
+        cJSON_Delete(system_block);
+        cJSON_Delete(cache_control);
+        goto fail;
+    }
+    if (!cJSON_AddStringToObject(system_block, "type", "text") ||
+        !cJSON_AddStringToObject(system_block, "text", system_prompt) ||
+        !cJSON_AddStringToObject(cache_control, "type", "ephemeral")) {
+        cJSON_Delete(system_block);
+        cJSON_Delete(cache_control);
+        goto fail;
+    }
+    cJSON_AddItemToObject(system_block, "cache_control", cache_control);
+    cJSON_AddItemToArray(system_blocks, system_block);
 
     cJSON *messages = cJSON_AddArrayToObject(root, "messages");
     if (!messages) {
@@ -257,7 +278,7 @@ static bool parse_anthropic_response(
 }
 
 // -----------------------------------------------------------------------------
-// OpenAI Format (OpenAI, OpenRouter, Ollama)
+// OpenAI Format (OpenAI, OpenRouter, Ollama, NVIDIA)
 // -----------------------------------------------------------------------------
 
 static char *build_openai_request(

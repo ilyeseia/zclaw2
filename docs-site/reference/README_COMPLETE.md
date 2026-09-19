@@ -35,7 +35,7 @@ Agent: Done. GPIO2 is now off.
 - **Built-in and custom tools** - Ships with a pre-built set of tools, easy to extend
 - **GPIO control** — Read sensors, toggle relays, control LEDs
 - **Persistent memory** — Remembers things across reboots
-- **Any LLM backend** — Anthropic, OpenAI, OpenRouter, or Ollama (custom endpoint)
+- **Any LLM backend** — Anthropic, OpenAI, OpenRouter, NVIDIA, or Ollama (custom endpoint)
 - **$5 hardware** — Just an ESP32 dev board and WiFi
 - **~888 KiB guaranteed max binary** — Fits in dual OTA partitions with ~40% free
 
@@ -522,7 +522,7 @@ If you switch between families (for example `esp32s3` to `esp32`), accept that p
 3. Enter required values:
    - WiFi SSID
    - LLM provider
-   - LLM API key (Anthropic/OpenAI/OpenRouter) or API URL (Ollama)
+   - LLM API key (Anthropic/OpenAI/OpenRouter/NVIDIA) or API URL (Ollama)
 4. Optional: WiFi password, Telegram bot token, Telegram chat ID allowlist
 5. Reboot board and watch logs with `./scripts/monitor.sh`
 
@@ -571,6 +571,7 @@ Edit `main/config.h` to customize:
 #define LLM_DEFAULT_MODEL_OPENAI    "gpt-5.4"             // OpenAI default
 #define LLM_DEFAULT_MODEL_OPENROUTER "openrouter/auto"      // OpenRouter default
 #define LLM_DEFAULT_MODEL_OLLAMA    "qwen3:8b"            // Ollama default
+#define LLM_DEFAULT_MODEL_NVIDIA    "meta/llama-3.3-70b-instruct" // NVIDIA default
 #define LLM_MAX_TOKENS 1024                   // Max response tokens
 #define MAX_HISTORY_TURNS 8                   // Conversation history length
 #define RATELIMIT_MAX_PER_HOUR 100            // LLM requests per hour
@@ -782,7 +783,7 @@ The script automatically detects if a device has encryption enabled and uses the
 ### Without Flash Encryption
 
 If you don't enable encryption and lose the device, immediately revoke:
-- **API keys**: Regenerate in Anthropic/OpenAI/OpenRouter dashboard
+- **API keys**: Regenerate in Anthropic/OpenAI/OpenRouter/NVIDIA dashboard
 - **Ollama endpoints**: If self-hosted endpoint credentials or reverse-proxy auth are used, rotate those host/proxy secrets.
 - **Telegram bot**: Message @BotFather → `/revoke`
 - **Web relay secret**: Rotate `ZCLAW_WEB_API_KEY` on the host

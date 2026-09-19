@@ -328,6 +328,14 @@ PROVIDERS = {
         api_key_env="OPENROUTER_API_KEY",
         wire_format="openai",
     ),
+    "nvidia": ProviderConfig(
+        name="nvidia",
+        api_url="https://integrate.api.nvidia.com/v1/chat/completions",
+        default_model="meta/llama-3.3-70b-instruct",
+        model_env="NVIDIA_MODEL",
+        api_key_env="NVIDIA_API_KEY",
+        wire_format="openai",
+    ),
 }
 
 

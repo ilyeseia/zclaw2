@@ -30,7 +30,7 @@ const char *llm_get_default_model(void);
 // Get current model (user-configured or default)
 const char *llm_get_model(void);
 
-// Check if backend uses OpenAI-compatible format (OpenAI, OpenRouter, Ollama)
+// Check if backend uses OpenAI-compatible format (OpenAI, OpenRouter, Ollama, NVIDIA)
 bool llm_is_openai_format(void);
 
 #if CONFIG_ZCLAW_STUB_LLM

@@ -29,9 +29,9 @@ Options:
   --port <serial-port>      Serial port (auto-detect if omitted)
   --ssid <wifi-ssid>        WiFi SSID (auto-detected when possible)
   --pass <wifi-pass>        WiFi password (optional)
-  --backend <provider>      anthropic | openai | openrouter | ollama
+  --backend <provider>      anthropic | openai | openrouter | ollama | nvidia
   --model <model-id>        Model ID (defaults by backend)
-  --api-key <key>           LLM API key (required for anthropic/openai/openrouter)
+  --api-key <key>           LLM API key (required for anthropic/openai/openrouter/nvidia)
   --api-url <url>           Optional custom API endpoint URL
   --tg-token <token>        Telegram bot token (optional)
   --tg-chat-id <id[,id...]> Telegram chat ID allowlist (optional)
@@ -352,6 +352,7 @@ default_model_for_backend() {
         openai) echo "gpt-5.4" ;;
         openrouter) echo "openrouter/auto" ;;
         ollama) echo "qwen3:8b" ;;
+        nvidia) echo "meta/llama-3.3-70b-instruct" ;;
         *) echo "claude-sonnet-4-6" ;;
     esac
 }
@@ -379,6 +380,10 @@ load_model_menu_for_backend() {
         ollama)
             MODEL_MENU_LABELS=("qwen3:8b (default)" "Other model ID")
             MODEL_MENU_VALUES=("qwen3:8b" "__custom__")
+            ;;
+        nvidia)
+            MODEL_MENU_LABELS=("meta/llama-3.3-70b-instruct (default)" "meta/llama-3.1-8b-instruct" "nvidia/llama-3.1-nemotron-70b-instruct" "Other model ID")
+            MODEL_MENU_VALUES=("meta/llama-3.3-70b-instruct" "meta/llama-3.1-8b-instruct" "nvidia/llama-3.1-nemotron-70b-instruct" "__custom__")
             ;;
         *)
             MODEL_MENU_LABELS=("Other model ID")
@@ -429,7 +434,7 @@ prompt_for_model() {
 
 validate_backend() {
     case "$1" in
-        anthropic|openai|openrouter|ollama) return 0 ;;
+        anthropic|openai|openrouter|ollama|nvidia) return 0 ;;
         *) return 1 ;;
     esac
 }
@@ -769,6 +774,39 @@ PY
     return 1
 }
 
+verify_nvidia_api_key() {
+    local api_key="$1"
+    local model="$2"
+    local api_url_override="$3"
+    local api_url="${api_url_override:-${NVIDIA_API_URL:-https://integrate.api.nvidia.com/v1/chat/completions}}"
+    local response_file
+    local http_code
+
+    if ! command -v curl >/dev/null 2>&1; then
+        echo "Warning: curl not found; skipping NVIDIA API check."
+        return 2
+    fi
+
+    # The NVIDIA models listing is public, so verify the key with a 1-token chat request.
+    response_file="$(mktemp -t zclaw-nvidia-check.XXXXXX 2>/dev/null || mktemp)"
+    if ! http_code="$(curl -sS -o "$response_file" -w "%{http_code}" -H "authorization: Bearer $api_key" -H "content-type: application/json" -d '{"model":"'"$model"'","messages":[{"role":"user","content":"ping"}],"max_tokens":1}' "$api_url")"; then
+        rm -f "$response_file"
+        echo "NVIDIA API check failed: network/transport error."
+        return 1
+    fi
+
+    if [ "$http_code" = "200" ]; then
+        rm -f "$response_file"
+        echo "NVIDIA API check passed (chat endpoint accepted the key)."
+        return 0
+    fi
+
+    echo "NVIDIA API check failed (HTTP $http_code)."
+    echo "Response preview: $(head -c 200 "$response_file")"
+    rm -f "$response_file"
+    return 1
+}
+
 verify_ollama_endpoint() {
     local api_key="$1"
     local _model="$2"
@@ -1010,13 +1048,13 @@ if [ -z "$BACKEND" ]; then
     if [ "$ASSUME_YES" = true ]; then
         BACKEND="openai"
     else
-        read -r -p "LLM provider [openai/anthropic/openrouter/ollama] (default: openai): " BACKEND
+        read -r -p "LLM provider [openai/anthropic/openrouter/ollama/nvidia] (default: openai): " BACKEND
         BACKEND="${BACKEND:-openai}"
     fi
 fi
 
 if ! validate_backend "$BACKEND"; then
-    echo "Error: invalid backend '$BACKEND' (expected anthropic|openai|openrouter|ollama)"
+    echo "Error: invalid backend '$BACKEND' (expected anthropic|openai|openrouter|ollama|nvidia)"
     exit 1
 fi
 
@@ -1076,6 +1114,10 @@ if [ "$VERIFY_API_KEY" = true ]; then
         ollama)
             VERIFY_LABEL="Ollama endpoint"
             VERIFY_FN="verify_ollama_endpoint"
+            ;;
+        nvidia)
+            VERIFY_LABEL="NVIDIA"
+            VERIFY_FN="verify_nvidia_api_key"
             ;;
     esac
 

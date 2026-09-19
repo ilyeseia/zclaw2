@@ -10,12 +10,13 @@ PROVIDER="${1:-all}"
 MESSAGE="${2:-Create a tool to blink GPIO 2 twice and report what you did.}"
 
 usage() {
-    echo "Usage: $0 [anthropic|openai|openrouter|all] [message]"
+    echo "Usage: $0 [anthropic|openai|openrouter|nvidia|all] [message]"
     echo ""
     echo "Env keys:"
     echo "  ANTHROPIC_API_KEY"
     echo "  OPENAI_API_KEY"
     echo "  OPENROUTER_API_KEY"
+    echo "  NVIDIA_API_KEY"
     echo ""
     echo "Examples:"
     echo "  $0 all"
@@ -46,10 +47,14 @@ case "$PROVIDER" in
     openrouter)
         run_provider "openrouter" "OPENROUTER_API_KEY"
         ;;
+    nvidia)
+        run_provider "nvidia" "NVIDIA_API_KEY"
+        ;;
     all)
         run_provider "anthropic" "ANTHROPIC_API_KEY"
         run_provider "openai" "OPENAI_API_KEY"
         run_provider "openrouter" "OPENROUTER_API_KEY"
+        run_provider "nvidia" "NVIDIA_API_KEY"
         ;;
     -h|--help)
         usage

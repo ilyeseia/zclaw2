@@ -58,8 +58,18 @@ TEST(build_anthropic_request)
     ASSERT_STR_EQ(model->valuestring, "claude-test-model");
 
     cJSON *system = cJSON_GetObjectItem(root, "system");
-    ASSERT(system != NULL && cJSON_IsString(system));
-    ASSERT_STR_EQ(system->valuestring, "sys prompt");
+    ASSERT(system != NULL && cJSON_IsArray(system));
+    ASSERT(cJSON_GetArraySize(system) == 1);
+    cJSON *system_block = cJSON_GetArrayItem(system, 0);
+    ASSERT(system_block != NULL);
+    cJSON *system_text = cJSON_GetObjectItem(system_block, "text");
+    ASSERT(system_text != NULL && cJSON_IsString(system_text));
+    ASSERT_STR_EQ(system_text->valuestring, "sys prompt");
+    cJSON *cache_control = cJSON_GetObjectItem(system_block, "cache_control");
+    ASSERT(cache_control != NULL);
+    cJSON *cache_type = cJSON_GetObjectItem(cache_control, "type");
+    ASSERT(cache_type != NULL && cJSON_IsString(cache_type));
+    ASSERT_STR_EQ(cache_type->valuestring, "ephemeral");
 
     cJSON *messages = cJSON_GetObjectItem(root, "messages");
     ASSERT(messages != NULL && cJSON_IsArray(messages));

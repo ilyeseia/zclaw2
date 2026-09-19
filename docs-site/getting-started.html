@@ -97,7 +97,7 @@ bash &lt;(curl -fsSL https://raw.githubusercontent.com/tnm/zclaw/main/scripts/bo
           <ol>
             <li>Flash firmware (<code>./scripts/flash.sh</code> or <code>./scripts/flash-secure.sh</code>). Flash scripts auto-detect chip target and can prompt for <code>idf.py set-target &lt;chip&gt;</code> on mismatch.</li>
             <li>Provision credentials (<code>./scripts/provision.sh --port &lt;serial-port&gt;</code>).</li>
-            <li>Enter WiFi SSID, LLM provider, and model. Use API key for Anthropic/OpenAI/OpenRouter, or API URL for Ollama. Optional Telegram fields can be filled now or later.</li>
+            <li>Enter WiFi SSID, LLM provider, and model. Use API key for Anthropic/OpenAI/OpenRouter/NVIDIA, or API URL for Ollama. Optional Telegram fields can be filled now or later.</li>
             <li>Reboot and inspect logs with <code>./scripts/monitor.sh</code>.</li>
           </ol>
           <p class="inline-note">ESP32-WROOM/ESP32 DevKit boards run target <code>esp32</code>; local chat uses UART0 automatically on targets without USB Serial/JTAG (no manual <code>CONFIG_ZCLAW_CHANNEL_UART</code> toggle needed).</p>
@@ -107,7 +107,7 @@ bash &lt;(curl -fsSL https://raw.githubusercontent.com/tnm/zclaw/main/scripts/bo
           <h2>LLM Provisioning Options</h2>
           <p>Backend/model/API settings are runtime credentials in NVS, so you can change them any time without reflashing firmware. The install flow prompts for the same values when you run <code>./install.sh</code> with provisioning enabled.</p>
           <ul>
-            <li><strong>anthropic</strong>, <strong>openai</strong>, <strong>openrouter</strong>: require <code>--api-key</code>.</li>
+            <li><strong>anthropic</strong>, <strong>openai</strong>, <strong>openrouter</strong>, <strong>nvidia</strong>: require <code>--api-key</code>.</li>
             <li><strong>ollama</strong>: requires <code>--api-url</code>; API key is optional.</li>
             <li>Use <code>--model</code> to override defaults on any backend.</li>
           </ul>
@@ -116,6 +116,9 @@ bash &lt;(curl -fsSL https://raw.githubusercontent.com/tnm/zclaw/main/scripts/bo
 
 # OpenRouter
 ./scripts/provision.sh --port /dev/cu.usbmodem1101 --backend openrouter --model openrouter/auto --api-key or-...
+
+# NVIDIA (build.nvidia.com API key, starts with nvapi-)
+./scripts/provision.sh --port /dev/cu.usbmodem1101 --backend nvidia --model meta/llama-3.3-70b-instruct --api-key nvapi-...
 
 # Ollama (LAN host)
 ./scripts/provision.sh --port /dev/cu.usbmodem1101 --backend ollama --model qwen3:8b --api-url http://192.168.1.50:11434</pre>

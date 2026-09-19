@@ -38,7 +38,7 @@ Overrides:
   --port <serial-port>
   --ssid <wifi-ssid>
   --pass <wifi-pass>
-  --backend <provider>   anthropic | openai | openrouter | ollama
+  --backend <provider>   anthropic | openai | openrouter | ollama | nvidia
   --model <model-id>
   --api-key <key>
   --api-url <url>          Custom API endpoint URL
@@ -75,6 +75,7 @@ ZCLAW_API_KEY=
 # OPENAI_API_KEY=
 # ANTHROPIC_API_KEY=
 # OPENROUTER_API_KEY=
+# NVIDIA_API_KEY=
 # OLLAMA_API_KEY=
 
 # Optional Telegram credentials:
@@ -182,6 +183,9 @@ resolve_api_key() {
             ;;
         openrouter)
             printf '%s\n' "${OPENROUTER_API_KEY:-}"
+            ;;
+        nvidia)
+            printf '%s\n' "${NVIDIA_API_KEY:-}"
             ;;
         ollama)
             printf '%s\n' "${OLLAMA_API_KEY:-}"
