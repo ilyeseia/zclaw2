@@ -6,7 +6,10 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 ## [Unreleased]
 
-- No unreleased changes yet.
+### Added
+- Added an `esp32c3-supermini` board preset (`--supermini`) for `build.sh`, `flash.sh`, and `flash-secure.sh` with a Super Mini-safe GPIO allowlist and BOOT-button factory reset.
+- Added `CONFIG_ZCLAW_WIFI_MAX_TX_POWER` to optionally cap WiFi TX power after startup; the Super Mini preset sets it to 8.5 dBm.
+- Added the Super Mini preset build to the firmware target matrix CI.
 
 ## [2.13.0] - 2026-03-22
 

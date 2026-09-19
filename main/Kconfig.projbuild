@@ -65,6 +65,16 @@ menu "zclaw Configuration"
             use real provider APIs without guest WiFi/TLS networking.
             Intended for emulator testing only.
 
+    config ZCLAW_WIFI_MAX_TX_POWER
+        int "WiFi max TX power override (0.25 dBm units, 0 = driver default)"
+        range 0 84
+        default 0
+        help
+            When non-zero, calls esp_wifi_set_max_tx_power() after WiFi starts.
+            Valid values are 8..84 (2 dBm to 21 dBm); 34 is 8.5 dBm.
+            Some boards (for example ESP32-C3 Super Mini clones) connect
+            reliably only at reduced TX power.
+
     menu "GPIO Tool Safety"
         config ZCLAW_GPIO_MIN_PIN
             int "Minimum GPIO pin exposed to tools"

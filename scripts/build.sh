@@ -15,11 +15,12 @@ IDF_TARGET_OVERRIDE=""
 SDKCONFIG_DEFAULTS_OVERRIDE=""
 
 usage() {
-    echo "Usage: $0 [--pad-to-888kb] [--board <preset>] [--box-3] [--t-relay]"
+    echo "Usage: $0 [--pad-to-888kb] [--board <preset>] [--box-3] [--t-relay] [--supermini]"
     echo "  --pad-to-888kb  Create build/zclaw-888kb.bin padded to exactly 888 KiB (909312 bytes)"
-    echo "  --board         Apply a board preset (currently: esp32s3-box-3, esp32-t-relay)"
+    echo "  --board         Apply a board preset (currently: esp32s3-box-3, esp32-t-relay, esp32c3-supermini)"
     echo "  --box-3         Alias for --board esp32s3-box-3"
     echo "  --t-relay       Alias for --board esp32-t-relay"
+    echo "  --supermini     Alias for --board esp32c3-supermini"
 }
 
 normalize_board_preset() {
@@ -29,6 +30,9 @@ normalize_board_preset() {
             ;;
         esp32-t-relay|ttgo-t-relay|lilygo-t-relay|t-relay)
             echo "esp32-t-relay"
+            ;;
+        esp32c3-supermini|esp32-c3-supermini|c3-supermini|c3-super-mini|supermini|super-mini)
+            echo "esp32c3-supermini"
             ;;
         *)
             echo ""
@@ -44,7 +48,7 @@ resolve_board_preset() {
     normalized="$(normalize_board_preset "$BOARD_PRESET")"
     if [ -z "$normalized" ]; then
         echo "Error: Unknown board preset '$BOARD_PRESET'"
-        echo "Supported presets: esp32s3-box-3, esp32-t-relay"
+        echo "Supported presets: esp32s3-box-3, esp32-t-relay, esp32c3-supermini"
         return 1
     fi
 
@@ -57,6 +61,10 @@ resolve_board_preset() {
         esp32-t-relay)
             BOARD_SDKCONFIG_FILE="sdkconfig.esp32-t-relay.defaults"
             IDF_TARGET_OVERRIDE="esp32"
+            ;;
+        esp32c3-supermini)
+            BOARD_SDKCONFIG_FILE="sdkconfig.esp32c3-supermini.defaults"
+            IDF_TARGET_OVERRIDE="esp32c3"
             ;;
         *)
             echo "Error: Unsupported board preset '$BOARD_PRESET'"
@@ -90,6 +98,9 @@ while [ $# -gt 0 ]; do
             ;;
         --t-relay)
             BOARD_PRESET="esp32-t-relay"
+            ;;
+        --supermini)
+            BOARD_PRESET="esp32c3-supermini"
             ;;
         -h|--help)
             usage

@@ -285,6 +285,13 @@ static esp_err_t ensure_wifi_started(void)
         return err;
     }
 
+#if defined(CONFIG_ZCLAW_WIFI_MAX_TX_POWER) && CONFIG_ZCLAW_WIFI_MAX_TX_POWER > 0
+    err = esp_wifi_set_max_tx_power(CONFIG_ZCLAW_WIFI_MAX_TX_POWER);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to set WiFi max TX power: %s", esp_err_to_name(err));
+    }
+#endif
+
     s_wifi_started = true;
     return ESP_OK;
 }

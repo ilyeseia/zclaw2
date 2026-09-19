@@ -27,6 +27,23 @@ jobs:
             -D SDKCONFIG_DEFAULTS="sdkconfig.defaults" \
             build
 
+  build-supermini-preset:
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v5.4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build firmware (esp32c3-supermini preset)
+        run: |
+          . "$IDF_PATH/export.sh"
+          idf.py \
+            -B "build-esp32c3-supermini" \
+            -D IDF_TARGET="esp32c3" \
+            -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.esp32c3-supermini.defaults" \
+            build
+
   build-box3-preset:
     runs-on: ubuntu-latest
     container:

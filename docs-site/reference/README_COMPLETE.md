@@ -78,6 +78,23 @@ ESP32-S3-BOX-3 preset:
 
 `--box-3` applies the `esp32s3` target plus board-specific GPIO safety and factory-reset defaults.
 
+ESP32-C3 Super Mini preset:
+
+```bash
+./scripts/build.sh --supermini
+./scripts/flash.sh --supermini /dev/cu.usbmodem1101
+# or encrypted flash:
+./scripts/flash-secure.sh --supermini /dev/cu.usbmodem1101
+```
+
+`--supermini` applies the `esp32c3` target and:
+
+- restricts tool GPIOs to `0,1,3,4,5,6,7,8,10`, skipping the boot-strapping pin GPIO2, the BOOT button on GPIO9, and the USB/UART pins (GPIO8 is the onboard LED, so the assistant can blink it);
+- keeps factory reset on the BOOT button (GPIO9, hold 5 seconds at startup);
+- lowers WiFi TX power to 8.5 dBm (`CONFIG_ZCLAW_WIFI_MAX_TX_POWER=34`), which fixes connection drops on Super Mini clones with a weak antenna match. Raise or remove it in `sdkconfig.esp32c3-supermini.defaults` if your board is stable at full power.
+
+To flash, hold BOOT while plugging in USB (or hold BOOT and tap RESET) so the board enters download mode.
+
 LilyGO TTGO T-Relay preset:
 
 ```bash

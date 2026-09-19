@@ -85,6 +85,8 @@ Test reports for other ESP32 variants are very welcome!
 
 Recommended starter board: [Seeed XIAO ESP32-C3](https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html)
 
+ESP32-C3 Super Mini: use the board preset (`./scripts/build.sh --supermini`, `./scripts/flash.sh --supermini <port>`) for a safe GPIO allowlist and reduced WiFi TX power.
+
 ## Local Dev & Hacking
 
 Typical fast loop:

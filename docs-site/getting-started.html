@@ -230,6 +230,12 @@ idf.py menuconfig</pre>
 # or encrypted flash:
 ./scripts/flash-secure.sh --box-3 /dev/cu.usbmodem1101</pre>
           <p class="inline-note"><code>--box-3</code> applies <code>esp32s3</code> target, board-safe GPIO allowlist, and factory-reset pin defaults.</p>
+          <pre># ESP32-C3 Super Mini preset
+./scripts/build.sh --supermini
+./scripts/flash.sh --supermini /dev/cu.usbmodem1101
+# or encrypted flash:
+./scripts/flash-secure.sh --supermini /dev/cu.usbmodem1101</pre>
+          <p class="inline-note"><code>--supermini</code> applies the <code>esp32c3</code> target, a GPIO allowlist of 0, 1, 3, 4, 5, 6, 7, 8, and 10 (GPIO8 is the onboard LED; GPIO2 and the BOOT button on GPIO9 are excluded), BOOT-button factory reset, and a reduced WiFi TX power for boards with a weak antenna match. Hold BOOT while plugging in USB to enter download mode.</p>
           <pre># LilyGO TTGO T-Relay preset
 ./scripts/build.sh --t-relay
 ./scripts/flash.sh --t-relay /dev/cu.usbserial-0001
