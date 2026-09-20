@@ -30,12 +30,18 @@ $nvsGen = Join-Path $IdfPath "components\nvs_flash\nvs_partition_generator\nvs_p
 if (-not (Test-Path $Python)) { throw "Python not found: $Python" }
 if (-not (Test-Path $nvsGen)) { throw "nvs_partition_gen.py not found: $nvsGen" }
 
+$validBackends = @("anthropic", "openai", "openrouter", "ollama", "nvidia")
+$backendIn = Read-Host -Prompt "LLM backend name, press Enter for [$Backend] (one of: $($validBackends -join ', '))"
+if ($backendIn) { $Backend = $backendIn.Trim().ToLower() }
+if ($validBackends -notcontains $Backend) {
+    throw "Invalid backend '$Backend'. Enter only a provider name (not a URL): $($validBackends -join ', ')"
+}
+$modelIn = Read-Host -Prompt "Model, press Enter for [$Model]"
+if ($modelIn) { $Model = $modelIn.Trim() }
+if ($Model -match '^https?://') { throw "Model must be a model ID, not a URL: $Model" }
+
 $ssid = Read-Host -Prompt "WiFi SSID"
 $wifiPass = Read-Secret "WiFi password"
-$backendIn = Read-Host -Prompt "LLM backend [$Backend]"
-if ($backendIn) { $Backend = $backendIn }
-$modelIn = Read-Host -Prompt "Model [$Model]"
-if ($modelIn) { $Model = $modelIn }
 $apiKey = Read-Secret "LLM API key"
 $tgToken = Read-Secret "Telegram bot token (leave empty to skip)"
 if ($tgToken -and -not $TgChatIds) {
