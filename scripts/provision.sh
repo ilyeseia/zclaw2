@@ -352,7 +352,7 @@ default_model_for_backend() {
         openai) echo "gpt-5.4" ;;
         openrouter) echo "openrouter/auto" ;;
         ollama) echo "qwen3:8b" ;;
-        nvidia) echo "meta/llama-3.3-70b-instruct" ;;
+        nvidia) echo "deepseek-ai/deepseek-v4-flash-0731" ;;
         *) echo "claude-sonnet-4-6" ;;
     esac
 }
@@ -382,8 +382,8 @@ load_model_menu_for_backend() {
             MODEL_MENU_VALUES=("qwen3:8b" "__custom__")
             ;;
         nvidia)
-            MODEL_MENU_LABELS=("meta/llama-3.3-70b-instruct (default)" "meta/llama-3.1-8b-instruct" "nvidia/llama-3.1-nemotron-70b-instruct" "Other model ID")
-            MODEL_MENU_VALUES=("meta/llama-3.3-70b-instruct" "meta/llama-3.1-8b-instruct" "nvidia/llama-3.1-nemotron-70b-instruct" "__custom__")
+            MODEL_MENU_LABELS=("deepseek-ai/deepseek-v4-flash-0731 (default)" "openai/gpt-oss-20b" "mistralai/mistral-large-2-instruct" "Other model ID")
+            MODEL_MENU_VALUES=("deepseek-ai/deepseek-v4-flash-0731" "openai/gpt-oss-20b" "mistralai/mistral-large-2-instruct" "__custom__")
             ;;
         *)
             MODEL_MENU_LABELS=("Other model ID")

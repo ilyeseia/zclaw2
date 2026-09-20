@@ -331,7 +331,7 @@ PROVIDERS = {
     "nvidia": ProviderConfig(
         name="nvidia",
         api_url="https://integrate.api.nvidia.com/v1/chat/completions",
-        default_model="meta/llama-3.3-70b-instruct",
+        default_model="deepseek-ai/deepseek-v4-flash-0731",
         model_env="NVIDIA_MODEL",
         api_key_env="NVIDIA_API_KEY",
         wire_format="openai",

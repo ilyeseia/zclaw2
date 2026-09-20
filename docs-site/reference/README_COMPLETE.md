@@ -571,7 +571,7 @@ Edit `main/config.h` to customize:
 #define LLM_DEFAULT_MODEL_OPENAI    "gpt-5.4"             // OpenAI default
 #define LLM_DEFAULT_MODEL_OPENROUTER "openrouter/auto"      // OpenRouter default
 #define LLM_DEFAULT_MODEL_OLLAMA    "qwen3:8b"            // Ollama default
-#define LLM_DEFAULT_MODEL_NVIDIA    "meta/llama-3.3-70b-instruct" // NVIDIA default
+#define LLM_DEFAULT_MODEL_NVIDIA    "deepseek-ai/deepseek-v4-flash-0731" // NVIDIA default
 #define LLM_MAX_TOKENS 1024                   // Max response tokens
 #define MAX_HISTORY_TURNS 8                   // Conversation history length
 #define RATELIMIT_MAX_PER_HOUR 100            // LLM requests per hour

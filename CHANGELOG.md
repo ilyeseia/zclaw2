@@ -7,7 +7,7 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ## [Unreleased]
 
 ### Added
-- Added an `nvidia` LLM backend (NVIDIA API Catalog, OpenAI-compatible chat completions at `integrate.api.nvidia.com`) with default model `meta/llama-3.3-70b-instruct`, provisioning support (`--backend nvidia`, `NVIDIA_API_KEY`), and API harness coverage.
+- Added an `nvidia` LLM backend (NVIDIA API Catalog, OpenAI-compatible chat completions at `integrate.api.nvidia.com`) with default model `deepseek-ai/deepseek-v4-flash-0731`, provisioning support (`--backend nvidia`, `NVIDIA_API_KEY`), and API harness coverage.
 - Added an `esp32c3-supermini` board preset (`--supermini`) for `build.sh`, `flash.sh`, and `flash-secure.sh` with a Super Mini-safe GPIO allowlist and BOOT-button factory reset.
 - Added `CONFIG_ZCLAW_WIFI_MAX_TX_POWER` to optionally cap WiFi TX power after startup; the Super Mini preset sets it to 8.5 dBm.
 - Added the Super Mini preset build to the firmware target matrix CI.
